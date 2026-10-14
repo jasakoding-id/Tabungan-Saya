@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tabungan Rp2.000.000</title>
+<meta name="description" content="Catat tabunganmu dari Rp50.000 sampai target Rp2.000.000.">
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="apple-touch-icon" href="favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#e9f1f4;--card:#fff;--ink:#12283a;--mute:#5d7282;--line:#d3e0e6;--jar:#1d8a6f;--jar-d:#14614f;--coin:#f4b52b;--red:#c2452d}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#0e1b25;--card:#162a38;--ink:#e8f1f5;--mute:#92a8b6;--line:#26404f;--jar:#2fb18f;--jar-d:#1d8a6f;--coin:#f6c04a;--red:#ef7b62}}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'Bricolage Grotesque',system-ui,-apple-system,'Segoe UI',sans-serif;line-height:1.5;padding:env(safe-area-inset-top,0) 0 env(safe-area-inset-bottom,0)}
+main{max-width:920px;margin:0 auto;padding:28px 18px 56px;display:grid;gap:18px;grid-template-columns:1fr}
+@media(min-width:800px){main{grid-template-columns:340px 1fr;align-items:start}.wide{grid-column:1/-1}}
+h1{margin:0;font-size:clamp(1.7rem,4vw,2.4rem);font-weight:800;letter-spacing:-.02em;line-height:1.1}
+.sub{color:var(--mute);margin:6px 0 0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px}
+.jarcard{display:flex;flex-direction:column;align-items:center;text-align:center}
+.jar{width:200px;height:auto}
+.saved{font-size:2rem;font-weight:800;letter-spacing:-.02em;margin:8px 0 0}
+.of{color:var(--mute);margin:0}
+.pct{font-weight:600;color:var(--jar-d)}
+@media(prefers-color-scheme:dark){.pct{color:var(--jar)}}
+label{display:block;font-weight:600;margin-bottom:6px}
+.row{display:flex;gap:8px}
+input{width:100%;font:inherit;padding:12px 14px;border:1.5px solid var(--line);border-radius:12px;background:var(--bg);color:var(--ink)}
+input:focus,button:focus-visible{outline:3px solid var(--coin);outline-offset:1px}
+button{font:inherit;font-weight:600;border:0;border-radius:12px;padding:12px 16px;cursor:pointer;background:var(--jar);color:#fff}
+button.alt{background:transparent;color:var(--ink);border:1.5px solid var(--line)}
+button.coin{background:var(--coin);color:#3a2a00}
+button:active{transform:scale(.98)}
+.quick{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 0}
+.quick button{padding:8px 14px;font-size:.92rem}
+.msg{min-height:1.4em;margin:10px 0 0;color:var(--red);font-size:.92rem}
+.steps{display:flex;justify-content:space-between;gap:6px;margin:0;padding:0;list-style:none;font-size:.85rem;color:var(--mute)}
+.steps li{flex:1;text-align:center;padding:8px 4px;border-radius:10px;border:1px solid var(--line)}
+.steps li.done{background:var(--jar);border-color:var(--jar);color:#fff;font-weight:600}
+h2{font-size:1.1rem;margin:0 0 12px}
+ul.hist{list-style:none;margin:0;padding:0}
+.hist li{display:flex;align-items:center;gap:12px;padding:11px 0;border-top:1px solid var(--line)}
+.hist li:first-child{border-top:0}
+.hist .d{flex:1;min-width:0}
+.hist .n{font-weight:600}
+.hist .t{color:var(--mute);font-size:.85rem}
+.in{color:var(--jar-d);font-weight:700}
+.out{color:var(--red);font-weight:700}
+@media(prefers-color-scheme:dark){.in{color:var(--jar)}}
+.x{background:none;color:var(--mute);padding:6px 10px;border-radius:8px}
+.empty{color:var(--mute);margin:0}
+.tools{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.tools button{padding:8px 14px;font-size:.9rem}
+.win{display:none;background:var(--coin);color:#3a2a00;border-radius:14px;padding:12px 16px;font-weight:600;margin-top:14px;text-align:center}
+.win.on{display:block}
+@media(prefers-reduced-motion:no-preference){#water{transition:y .7s cubic-bezier(.2,.8,.2,1),height .7s cubic-bezier(.2,.8,.2,1)}}
+</style>
+</head>
+<body>
+<main>
+  <header class="wide">
+    <h1>Tabungan Rp2.000.000</h1>
+    <p class="sub">Mulai dari Rp50.000, tambah sedikit demi sedikit sampai target tercapai.</p>
+  </header>
+
+  <section class="card jarcard" aria-label="Progres tabungan">
+    <svg class="jar" viewBox="0 0 200 260" role="img" aria-label="Toples tabungan">
+      <defs><clipPath id="in"><path d="M42 58h116v150a22 22 0 0 1-22 22H64a22 22 0 0 1-22-22z"/></clipPath></defs>
+      <rect x="30" y="20" width="140" height="26" rx="8" fill="var(--coin)"/>
+      <path d="M42 58h116v150a22 22 0 0 1-22 22H64a22 22 0 0 1-22-22z" fill="var(--bg)"/>
+      <g clip-path="url(#in)">
+        <rect id="water" x="30" y="230" width="140" height="0" fill="var(--jar)"/>
+        <circle cx="80" cy="212" r="7" fill="var(--coin)" opacity=".9"/>
+        <circle cx="112" cy="218" r="7" fill="var(--coin)" opacity=".9"/>
+        <circle cx="138" cy="210" r="6" fill="var(--coin)" opacity=".9"/>
+      </g>
+      <path d="M42 58h116v150a22 22 0 0 1-22 22H64a22 22 0 0 1-22-22z" fill="none" stroke="var(--ink)" stroke-width="4"/>
+    </svg>
+    <p class="saved" id="saved">Rp0</p>
+    <p class="of">dari <span id="target">Rp2.000.000</span></p>
+    <p class="pct" id="pct">0%</p>
+    <p class="of" id="left"></p>
+    <div class="win" id="win">Target tercapai. Selamat!</div>
+  </section>
+
+  <section class="card" aria-label="Tambah tabungan">
+    <label for="amt">Jumlah (Rp)</label>
+    <div class="row">
+      <input id="amt" type="text" inputmode="numeric" placeholder="Contoh: 50.000" autocomplete="off">
+    </div>
+    <div class="quick" id="quick">
+      <button type="button" class="alt" data-v="10000">+10.000</button>
+      <button type="button" class="alt" data-v="25000">+25.000</button>
+      <button type="button" class="alt" data-v="50000">+50.000</button>
+      <button type="button" class="alt" data-v="100000">+100.000</button>
+    </div>
+    <div class="row" style="margin-top:14px">
+      <button type="button" id="add" style="flex:1">Tabung</button>
+      <button type="button" id="take" class="alt">Ambil</button>
+    </div>
+    <p class="msg" id="msg" role="status"></p>
+    <div class="tools">
+      <button type="button" class="alt" id="setT">Ubah target</button>
+      <button type="button" class="alt" id="reset">Mulai ulang</button>
+    </div>
+  </section>
+
+  <section class="card wide" aria-label="Pencapaian">
+    <h2>Pencapaian</h2>
+    <ul class="steps" id="steps"></ul>
+  </section>
+
+  <section class="card wide" aria-label="Riwayat">
+    <h2>Riwayat</h2>
+    <ul class="hist" id="hist"></ul>
+  </section>
+</main>
+
+<script>
+(function(){
+  var KEY='tabungan-v1', DEF_TARGET=2000000, START=50000;
+  var state=load();
+  var $=function(id){return document.getElementById(id)};
+
+  function rp(n){return 'Rp'+Math.round(n).toLocaleString('id-ID')}
+  function load(){
+    try{var s=JSON.parse(localStorage.getItem(KEY));if(s&&Array.isArray(s.items))return s}catch(e){}
+    return fresh();
+  }
+  function fresh(){return {target:DEF_TARGET,items:[{id:Date.now(),type:'in',amount:START,note:'Setoran awal',at:Date.now()}]}}
+  function save(){try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}}
+  function total(){return state.items.reduce(function(a,i){return a+(i.type==='in'?i.amount:-i.amount)},0)}
+  function parseAmt(){return parseInt(($('amt').value||'').replace(/\D/g,''),10)||0}
+  function say(t){$('msg').textContent=t||''}
+  function fmtDate(ts){return new Date(ts).toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'})}
+
+  function render(){
+    var t=total(), tg=state.target, p=Math.max(0,Math.min(100,t/tg*100));
+    $('saved').textContent=rp(t);
+    $('target').textContent=rp(tg);
+    $('pct').textContent=(Math.round(p*10)/10).toString().replace('.',',')+'%';
+    $('left').textContent=t>=tg?'':'Kurang '+rp(tg-t);
+    $('win').classList.toggle('on',t>=tg);
+    var h=Math.round(170*p/100), w=$('water');
+    w.setAttribute('height',h); w.setAttribute('y',230-h);
+
+    var marks=[.25,.5,.75,1];
+    $('steps').innerHTML=marks.map(function(m){
+      var v=tg*m;return '<li class="'+(t>=v?'done':'')+'">'+rp(v)+'</li>'
+    }).join('');
+
+    var items=state.items.slice().sort(function(a,b){return b.at-a.at});
+    if(!items.length){$('hist').innerHTML='<li><p class="empty">Belum ada catatan. Masukkan jumlah di atas lalu tekan Tabung.</p></li>';return}
+    $('hist').innerHTML=items.map(function(i){
+      return '<li><div class="d"><div class="n">'+(i.type==='in'?'Tabung':'Ambil')+(i.note?' · '+esc(i.note):'')+'</div><div class="t">'+fmtDate(i.at)+'</div></div>'+
+      '<span class="'+(i.type==='in'?'in':'out')+'">'+(i.type==='in'?'+':'−')+rp(i.amount)+'</span>'+
+      '<button class="x" data-del="'+i.id+'" aria-label="Hapus catatan">Hapus</button></li>'
+    }).join('');
+  }
+  function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+
+  function commit(type){
+    var a=parseAmt();
+    if(!a){say('Masukkan jumlah lebih dari Rp0.');return}
+    if(type==='out'&&a>total()){say('Jumlah melebihi saldo tabungan ('+rp(total())+').');return}
+    state.items.push({id:Date.now(),type:type,amount:a,note:'',at:Date.now()});
+    $('amt').value='';say('');save();render();
+  }
+
+  $('amt').addEventListener('input',function(){
+    var d=this.value.replace(/\D/g,'');
+    this.value=d?parseInt(d,10).toLocaleString('id-ID'):'';
+  });
+  $('amt').addEventListener('keydown',function(e){if(e.key==='Enter')commit('in')});
+  $('add').addEventListener('click',function(){commit('in')});
+  $('take').addEventListener('click',function(){commit('out')});
+  $('quick').addEventListener('click',function(e){
+    var v=e.target.getAttribute('data-v');if(!v)return;
+    var cur=parseAmt();$('amt').value=(cur+parseInt(v,10)).toLocaleString('id-ID');say('');
+  });
+  $('hist').addEventListener('click',function(e){
+    var id=e.target.getAttribute('data-del');if(!id)return;
+    if(!confirm('Hapus catatan ini?'))return;
+    state.items=state.items.filter(function(i){return String(i.id)!==id});
+    save();render();
+  });
+  $('setT').addEventListener('click',function(){
+    var v=prompt('Target tabungan baru (Rp):',state.target);
+    if(v===null)return;
+    var n=parseInt(String(v).replace(/\D/g,''),10);
+    if(!n){say('Target harus berupa angka lebih dari 0.');return}
+    state.target=n;say('');save();render();
+  });
+  $('reset').addEventListener('click',function(){
+    if(!confirm('Hapus semua catatan dan mulai ulang dari Rp50.000?'))return;
+    state=fresh();save();render();
+  });
+  render();
+})();
+</script>
+</body>
+</html>
